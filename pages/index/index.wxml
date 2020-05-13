@@ -1,0 +1,12 @@
+<view>
+  <SearchInput></SearchInput>
+  <view class="index_swiper">
+    <swiper autoplay circular indicator-dots>
+      <swiper-item wx:for="{{swiperList}}" wx:key="goods_id">
+        <navigator>
+          <image class="" src="{{item.image_src}}" mode="widthFix" lazy-load="false" binderror="" bindload=""></image>
+        </navigator>
+      </swiper-item>
+    </swiper>
+  </view>
+</view>
