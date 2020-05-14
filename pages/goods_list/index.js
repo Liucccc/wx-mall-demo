@@ -27,5 +27,13 @@ Page({
    */
   onLoad: function (options) {
 
+  },
+  handleTabsItemChange(e) {
+    const { index } = e.detail;
+    let { tabs } = this.data;
+    tabs.forEach((v, i) => i === index ? v.isActive = true : v.isActive = false);
+    this.setData({
+      tabs
+    })
   }
 })

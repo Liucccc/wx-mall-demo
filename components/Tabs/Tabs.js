@@ -23,9 +23,8 @@ Component({
   methods: {
     handleItemTap(e) {
       const { index } = e.currentTarget.dataset;
-      console.log(index);
 
-      // this.triggerEvent("tabsItemChange", index);
+      this.triggerEvent("tabsItemChange", { index });
     }
   }
 })
