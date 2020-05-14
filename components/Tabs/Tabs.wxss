@@ -1,7 +1,7 @@
-.tabs .tabs_title {
+.tabs_title {
   display: flex;
 }
-.tabs .title_item {
+.title_item {
   display: flex;
   justify-content: center;
   align-items: center;
