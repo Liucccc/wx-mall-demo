@@ -1,66 +1,79 @@
-// pages/cart/index.js
+import { getSetting, chooseAddress, openSetting } from "../../utils/asyncWx.js";
+import regeneratorRuntime from '../../lib/runtime/runtime';
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad: function (options) {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-
+    address: {},
+    cart: [],
+    allChecked: false,
+    totalPrice: 0,
+    totalNum: 0
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
+    const address = wx.getStorageSync("address");
+    const cart = wx.getStorageSync("cart") || [];
+    this.setData({
+      address
+    })
+    this.setCart(cart)
+  },
+  // 点击获取收货地址
+  async handleChooseAddress() {
+    try {
+      const res1 = await getSetting();
+      const scopeAddress = res1.authSetting["scope.address"];
+      if (scopeAddress === false) {
+        await openSetting();
+      }
+      let address = await chooseAddress();
+      address.all = address.provinceName + address.cityName + address.countyName + address.detailInfo;
+      wx.setStorageSync("address", address);
+
+    } catch (err) {
+      console.log(err);
+
+    }
+  },
+  // 商品选中
+  handleItemChange(e) {
+    const goods_id = e.currentTarget.dataset.id;
+
+    let { cart } = this.data;
+    let index = cart.findIndex(v => v.goods_id === goods_id);
+    cart[index].checked = !cart[index].checked;
+    this.setCart(cart)
 
   },
+  // 设置购物车状态同时重新计算底部工具栏数据
+  setCart(cart) {
+    let allChecked = true;
+    let totalPrice = 0;
+    let totalNum = 0;
+    cart.forEach(v => {
+      if (v.checked) {
+        totalPrice += v.num * v.goods_price;
+        totalNum += v.num;
+      } else {
+        allChecked = false;
+      }
+    })
 
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
+    allChecked = cart.length != 0 ? allChecked : false;
 
-  },
+    this.setData({
+      cart,
+      allChecked,
+      totalPrice,
+      totalNum
+    })
 
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-
+    wx.setStorageSync("cart", cart);
   }
 })
