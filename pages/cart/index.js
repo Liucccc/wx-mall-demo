@@ -1,4 +1,4 @@
-import { getSetting, chooseAddress, openSetting } from "../../utils/asyncWx.js";
+import { getSetting, chooseAddress, openSetting, showModal, showToast } from "../../utils/asyncWx.js";
 import regeneratorRuntime from '../../lib/runtime/runtime';
 Page({
 
@@ -75,5 +75,43 @@ Page({
     })
 
     wx.setStorageSync("cart", cart);
+  },
+  // 全选
+  handleItemAllCheck() {
+    let { cart, allChecked } = this.data;
+    allChecked = !allChecked;
+    cart.forEach(v => v.checked = allChecked);
+    this.setCart(cart);
+  },
+  // 商品数量修改
+  async handleItemNumEdit(e) {
+    const { id, operation } = e.currentTarget.dataset;
+    let { cart } = this.data;
+    const index = cart.findIndex(v => v.goods_id === id);
+    if (cart[index].num === 1 && operation === -1) {
+      const result = await showModal({ content: "您是否要删除此商品？" });
+      if (result.confirm) {
+        cart.splice(index, 1);
+        this.setCart(cart)
+      }
+    } else {
+      cart[index].num += operation;
+      this.setCart(cart);
+    }
+  },
+  //结算
+  async handlePay() {
+    const { totalNum, address } = this.data;
+    if (!address.userName) {
+      await showToast({ title: "您还没有选择收货地址" });
+      return;
+    }
+    if (totalNum === 0) {
+      await showToast({ title: "您还没有选购商品" });
+      return;
+    }
+    wx.navigateTo({
+      url: '/pages/pay/index'
+    });
   }
 })
