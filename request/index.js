@@ -1,5 +1,10 @@
 let ajaxTimes = 0;
 export const request = (params) => {
+    let header = { ...params.header };
+    if (params.url.includes("/my/")) {
+        header["Authorization"] = wx.getStorageSync("token");
+    }
+
     ajaxTimes++;
     wx.showLoading({
         title: "加载中",
@@ -10,6 +15,7 @@ export const request = (params) => {
         wx.request({
             ...params,
             url: baseUrl + params.url,
+            header,
             success: (result) => {
                 resolve(result.data.message);
             },

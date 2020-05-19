@@ -1,5 +1,10 @@
-import { getSetting, chooseAddress, openSetting, showModal, showToast } from "../../utils/asyncWx.js";
 import regeneratorRuntime from '../../lib/runtime/runtime';
+import {
+  request
+} from '../../request/index.js'
+import {
+  showModal
+} from "../../utils/asyncWx.js";
 Page({
 
   /**
@@ -35,18 +40,55 @@ Page({
     })
   },
   //结算
-  async handlePay() {
-    const { totalNum, address } = this.data;
-    if (!address.userName) {
-      await showToast({ title: "您还没有选择收货地址" });
-      return;
+  async handleOrderPay() {
+    try {
+      const token = wx.getStorageSync("token");
+      if (!token) {
+        wx.navigateTo({
+          url: '/pages/auth/index'
+
+        });
+        return;
+      }
+      const order_price = this.data.totalPrice;
+      const consignee_addr = this.data.address.all;
+      let cart = this.data.cart;
+      let goods = [];
+      cart.forEach(v => goods.push({
+        goods_id: v.goods_id,
+        goods_number: v.num,
+        goods_price: v.goods_price
+      }));
+      const orderParams = {
+        order_price,
+        consignee_addr,
+        goods
+      }
+      const res = await request({
+        url: "/my/orders/create",
+        method: "POST",
+        data: orderParams
+      })
+
+      let newCart = wx.getStorageSync("cart");
+      newCart = newCart.filter(v => !v.checked);
+      wx.setStorageSync("cart", newCart);
+
+      await showModal({
+        content: "没有企业账号，支付成功"
+      })
+      wx.navigateTo({
+        url: '/pages/order/index?type=1'
+      });
+
+    } catch (error) {
+      console.log(error);
+      await showModal({
+        content: "没有企业账号，支付失败"
+      })
+      wx.navigateTo({
+        url: '/pages/order/index?type=1'
+      });
     }
-    if (totalNum === 0) {
-      await showToast({ title: "您还没有选购商品" });
-      return;
-    }
-    wx.navigateTo({
-      url: '/pages/pay/index'
-    });
   }
 })

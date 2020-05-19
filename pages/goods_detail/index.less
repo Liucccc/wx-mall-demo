@@ -1,28 +1,33 @@
-page{
+page {
     padding-bottom: 90rpx;
 }
-.detail_swiper{
-    swiper{
+
+.detail_swiper {
+    swiper {
         height: 60vw;
         text-align: center;
-        image{
+
+        image {
             width: 60%;
         }
     }
 }
-.goods_price{
+
+.goods_price {
     padding: 15rpx;
     font-size: 32rpx;
     font-weight: 600;
     color: var(--themeColor);
 
 }
-.goods_name_row{
+
+.goods_name_row {
     border-top: 5rpx solid #dedede;
     border-bottom: 5rpx solid #dedede;
     padding: 10px 0rpx;
     display: flex;
-    .goods_name{
+
+    .goods_name {
         flex: 5;
         color: #000;
         font-size: 30rpx;
@@ -32,32 +37,40 @@ page{
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 2;
     }
-    .goods_collect{
+
+    .goods_collect {
         flex: 1;
         display: flex;
         justify-content: center;
         align-items: center;
         border-left: 1rpx solid #dedede;
+
+        .icon-shoucang1 {
+            color: var(--themeColor);
+        }
     }
 }
-.goods_info{
-    .goods_info_title{
+
+.goods_info {
+    .goods_info_title {
         font-size: 32rpx;
         color: var(--themeColor);
         font-weight: 600;
         padding: 20rpx;
     }
 }
-.btm_tools{
+
+.btm_tools {
     border-top: 1rpx solid #ccc;
     position: fixed;
-    left:0;
+    left: 0;
     bottom: 0;
     width: 100%;
     height: 90rpx;
     background-color: #fff;
     display: flex;
-    .tool_item{
+
+    .tool_item {
         flex: 1;
         display: flex;
         flex-direction: column;
@@ -65,7 +78,8 @@ page{
         align-items: center;
         font-size: 24rpx;
         position: relative;
-        button{
+
+        button {
             position: absolute;
             top: 0;
             left: 0;
@@ -74,7 +88,8 @@ page{
             opacity: 0;
         }
     }
-    .btn_cart{
+
+    .btn_cart {
         flex: 2;
         display: flex;
         flex-direction: column;
@@ -85,7 +100,8 @@ page{
         font-size: 30rpx;
         font-weight: 600;
     }
-    .btn_buy{
+
+    .btn_buy {
         flex: 2;
         display: flex;
         flex-direction: column;
